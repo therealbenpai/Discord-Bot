@@ -1,4 +1,7 @@
 # Discord Bot Code
+
+**NOTICE: This is not up to date. Do not use this. I will update it later**
+
 This is a source code repo for a Discord bot running using the Discord.js library. To install the bot, you will need to run `npm i` (for the CLI, run `npm i sparty18-cli`).
 
 ## Directorys and what they are for:
