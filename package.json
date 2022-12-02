@@ -1,0 +1,41 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "description": "Benjamin's Discord Bot",
+  "main": "index.js",
+  "types": "@types/index.d.ts",
+  "private": true,
+  "dependencies": {
+    "@discordjs/builders": "^0.12.0",
+    "@sentry/integrations": "^7.21.1",
+    "@sentry/node": "^7.20.1",
+    "@sentry/profiling-node": "^0.0.12",
+    "@sentry/types": "^7.21.1",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.3",
+    "sequelize": "^6.26.0",
+    "sqlite3": "^5.1.2",
+    "upgrade": "^1.1.0",
+    "util-deprecate": "^1.0.2"
+  },
+  "scripts": {
+    "start": "node deploy-commands.js && node index.js",
+    "bot": "node index.js",
+    "commands": "node deploy-commands.js"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "bot",
+    "discord bot"
+  ],
+  "author": "Sparty182020",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@discordjs/rest": "^0.3.0",
+    "@tmware/status-rotate": "^1.2.9",
+    "discord-api-types": "^0.31.2",
+    "util": "^0.12.4",
+    "uuid": "^8.3.2"
+  }
+}
