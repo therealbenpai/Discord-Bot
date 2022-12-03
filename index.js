@@ -295,7 +295,20 @@ mainClient.on(`interactionCreate`, async interaction => {
 				await interaction.reply({ embeds: [userEmbed] })
 				break;
 			case 'aww':
-				trees
+				// upon running the command, the bot will send a random image from the subreddit r/aww (using fetch api)
+				// It will format the image into an embed and send it
+				const aww = await fetch('https://www.reddit.com/r/aww/random/.json')
+					.then(res => res.json())
+					.then(json => json[0].data.children[0].data.url)
+				const awwEmbed = {
+					color: Math.floor(Math.random() * Math.pow(16, 6)),
+					title: 'Aww',
+					image: {
+						url: aww
+					},
+					timestamp: new Date().toISOString()
+				}
+				await interaction.reply({ embeds: [awwEmbed] })
 				break;
 			case 'support':
 				const link = 'https://discord.gg/nZUXdVuaTZ'
