@@ -29,7 +29,7 @@ const { Giveaways } = require(`./src/database.js`);
 const { default: giveaway } = require("./commands/giveaway");
 
 const regexList = {
-	swares: /(tf)|(wtf)|(fuck)|(bitch)|(cunt)|(damn)|(shit)|(stfu)|(fu)|(f you)/gmi,
+	swares: /((^| )((tf)|(wtf)|(fuck)|(bitch)|(cunt)|(damn)|(shit)|(stfu)|(fu)|(f you))($| ))/gmi,
 	selfBan: /(ban me)/gmi,
 }
 
@@ -295,16 +295,13 @@ mainClient.on(`interactionCreate`, async interaction => {
 				await interaction.reply({ embeds: [userEmbed] })
 				break;
 			case 'aww':
-				// upon running the command, the bot will send a random image from the subreddit r/aww (using fetch api)
-				// It will format the image into an embed and send it
-				const aww = await fetch('https://www.reddit.com/r/aww/random/.json')
-					.then(res => res.json())
-					.then(json => json[0].data.children[0].data.url)
+				const aww = await fetch('https://www.reddit.com/r/aww/random/.json').then(response => response.json())
 				const awwEmbed = {
 					color: Math.floor(Math.random() * Math.pow(16, 6)),
-					title: 'Aww',
+					title: aww[0].data.children[0].data.title,
+					url: aww[0].data.children[0].data.url,
 					image: {
-						url: aww
+						url: aww[0].data.children[0].data.url
 					},
 					timestamp: new Date().toISOString()
 				}
@@ -420,6 +417,10 @@ mainClient.on('messageCreate', async (interaction) => {
 			case 'slay':
 			case 'slayy':
 			case 'slayyy':
+				if (author.id === "1047888789588160603") {
+					channel.send('Since you are Derrick, I will say "Zombies!"')
+					break;
+				}
 				Math.round(Math.random()) == 1 ?
 					channel.send('Zombies!') :
 					channel.send('Yassss Queen!')
@@ -427,6 +428,8 @@ mainClient.on('messageCreate', async (interaction) => {
 			case 'testreport':
 				undefinedReference()
 				break;
+			case 'santa':
+				channel.send('This command is currently being developed by **Benjamin** (not Derrick)')
 			default:
 				break;
 		}
@@ -471,7 +474,7 @@ assistantClient.on('messageCreate', async (interaction) => {
 		if (content.toLowerCase().includes('bot invite')) {
 			await channel.send(`You can invite the main bot into your server using this link: https://discord.com/api/oauth2/authorize?client_id=${mainClientID}&permissions=8&scope=bot%20applications.commands`)
 		}
-		if (content.match(regexList.swares)[0] !== null) {
+		if (regexList.swares.test(content)) {
 			await channel.send(`Watch your language please!`)
 			return;
 		}
