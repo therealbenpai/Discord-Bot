@@ -21,13 +21,7 @@ const {
 	MAIN_TOKEN: mainToken,
 	MAIN_CLIENT_ID: mainClientID,
 	MAIN_CLIENT_SECRET: mainClientSecret,
-	ASSISTANT_TOKEN: assistantToken,
-	ASSISTANT_CLIENT_ID: assistantClientID,
-	ASSISTANT_CLIENT_SECRET: assistantClientSecret
 } = process.env;
-const { Giveaways } = require(`./src/database.js`);
-const { default: giveaway } = require("./commands/giveaway");
-
 const regexList = {
 	swares: /((^| )((tf)|(wtf)|(fuck)|(bitch)|(cunt)|(damn)|(shit)|(stfu)|(fu)|(f you))($| ))/gmi,
 	selfBan: /(ban me)/gmi,
@@ -94,28 +88,6 @@ const mainClient = new Client({
 	}
 });
 
-const assistantClient = new Client({
-	intents: [
-		1, // GUILDS
-		2, // GUILD_MEMBERS
-		4, // GUILD_BANS
-		8, // GUILD_EMJOS_AND_STICKERS
-		64, // GUILD_INVITES
-		256, // GUILD_PRESENCES
-		512, // GUILD_MESSAGES
-		32768 // MESSAGE_CONTENT
-	],
-	presence: {
-		activities: [
-			{
-				name: 'over the server',
-				type: 5
-			}
-		],
-		status: 'dnd'
-	}
-});
-
 //? Sentry Configuration
 Sentry.init(
 	{
@@ -143,10 +115,6 @@ Sentry.init(
 //? On startup code
 mainClient.once(`ready`, () => {
 	console.log(`The core bot has been properly started.`);
-});
-
-assistantClient.once(`ready`, () => {
-	console.log(`The assistant bot has been properly started.`);
 });
 
 //? Command Handling
@@ -437,51 +405,4 @@ mainClient.on('messageCreate', async (interaction) => {
 		sendError(interaction, err, 'Main')
 	}
 })
-
-assistantClient.on('interactionCreate', async (interaction) => {
-	const { commandName } = interaction
-	if (!interaction.isCommand()) return;
-	try {
-		switch (commandName) {
-			// Current Commands: about, announce, ban, kick, mute
-			case 'about':
-				// TODO... Code
-				break;
-			case 'announce':
-				const pingSelection = interaction.options.getBoolean('ping') ?? false
-				break;
-			case 'ban':
-				// TODO... Code
-				break;
-			case 'kick':
-				// TODO... Code
-				break;
-			case 'mute':
-				// TODO... Code
-				break;
-			default:
-				break
-		}
-	} catch (err) {
-		sendError(interaction, err, 'Assistant')
-	}
-})
-
-assistantClient.on('messageCreate', async (interaction) => {
-	const { content, author, channel, guild } = interaction
-	if (author.bot) return;
-	try {
-		if (content.toLowerCase().includes('bot invite')) {
-			await channel.send(`You can invite the main bot into your server using this link: https://discord.com/api/oauth2/authorize?client_id=${mainClientID}&permissions=8&scope=bot%20applications.commands`)
-		}
-		if (regexList.swares.test(content)) {
-			await channel.send(`Watch your language please!`)
-			return;
-		}
-	} catch (err) {
-		sendError(interaction, err, 'Assistant')
-	}
-})
-
 mainClient.login(mainToken)
-assistantClient.login(assistantToken)
