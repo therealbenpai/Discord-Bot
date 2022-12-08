@@ -81,7 +81,7 @@ mainClient.on(`interactionCreate`, async interaction => {
 {% endcode %}
 
 <pre class="language-javascript" data-title="index.js (at line 400)" data-line-numbers><code class="lang-javascript"><strong>// Message Response controller
-</strong><strong>mainClient.on('messageCreate', async (interaction) => {
+</strong><strong>mainClient.on('messageCreate', async interaction => {
 </strong>	const { content, author, channel, guild } = interaction
 	if (author.bot) return;
 })
