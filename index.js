@@ -430,6 +430,10 @@ mainClient.on('messageCreate', async (interaction) => {
 				break;
 			case 'santa':
 				channel.send('This command is currently being developed by **Benjamin** (not Derrick)')
+			case 'time':
+				const timeText = `<t:${getUnixTime()}:f>`
+				channel.send(timeText)
+				break;
 			default:
 				break;
 		}
