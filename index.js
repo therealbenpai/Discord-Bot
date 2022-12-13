@@ -7,7 +7,8 @@ const {
 	DiscordjsError,
 	DiscordjsTypeError,
 	Message,
-	ChatInputCommandInteraction
+	ChatInputCommandInteraction,
+	Embed
 } = require(`discord.js`);
 const Sentry = require("@sentry/node");
 const { ProfilingIntegration } = require("@sentry/profiling-node");
@@ -449,10 +450,27 @@ assistantClient.on('interactionCreate', async (interaction) => {
 		switch (commandName) {
 			// Current Commands: about, announce, ban, kick, mute
 			case 'about':
-				// TODO... Code
+				/**
+				 * @var {Embed} aboutEmbed
+				 */
+				const aboutEmbed = {
+					color: Math.floor(Math.random * (16**6)),
+					title: 'About Me',
+					description: '',
+					footer: {
+						text: ''
+					},
+					timestamp: getUnixTime()
+				}
+				interaction.reply({embeds: [aboutEmbed]})
 				break;
 			case 'announce':
+				const messageString = interaction.options.getString('message')
 				const pingSelection = interaction.options.getBoolean('ping') ?? false
+				const announcementChannel = interaction.guild.channels.cache.get("1052276805756784670")
+				const messageString = `${(pingSelection ? '@everyone ' : '')}${messageString}`
+				announcementChannel.send(messageString);
+				interaction.reply({content: 'Announcement Sent', ephemeral: true})
 				break;
 			case 'ban':
 				// TODO... Code
