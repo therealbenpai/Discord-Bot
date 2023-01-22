@@ -312,84 +312,6 @@ mainClient.on(`interactionCreate`, async interaction => {
 				const link = 'https://discord.gg/nZUXdVuaTZ'
 				interaction.reply(`Here is the link to the support server: ${link}`)
 				break;
-			case 'giveaway':
-				switch (interaction.options.getSubcommand()) {
-					case 'start':
-						const giveawayChannel = interaction.options.getChannel('channel')
-						const giveawayDuration = interaction.options.getInteger('duration')
-						const giveawayPrize = interaction.options.getString('prize')
-						const giveawayWinners = interaction.options.getInteger('winners')
-						const requirements = [
-							interaction.options.getString('requirement1') ?? null,
-							interaction.options.getString('requirement2') ?? null,
-							interaction.options.getString('requirement3') ?? null,
-						]
-						const giveawayManager = Giveaways.create({
-							giveawayID: require('./src/randomGenerators').randomString(8),
-							messageID: "to enter",
-							channelID: giveawayChannel.id,
-							guildID: interaction.guild.id,
-							startAt: Date.now(),
-							endAt: Date.now() + (giveawayDuration * 60000),
-							endAtUnix: Math.floor(Date.now()/1000) + (giveawayDuration * 60),
-							ended: false,
-							winnerCount: giveawayWinners,
-							prize: giveawayPrize,
-							requirement1: requirements[0],
-							requirement2: requirements[1],
-							requirement3: requirements[2],
-							hostedBy: interaction.user.id
-						})
-						const giveawayEmbed = {
-							color: Math.floor(Math.random() * Math.pow(16, 6)),
-							title: 'Giveaway',
-							description: `React with 🎉 to enter!\nHosted by: ${interaction.user.tag}\nRequirements: ${requirements.join(', ')}`,
-							footer: {
-								text: `Ends at <t:${Math.floor(Date.now()/1000) + (giveawayDuration * 60)}:R>`
-							}
-						}
-						const giveawayMessage = await giveawayChannel.send({ embeds: [giveawayEmbed] })
-						giveawayManager.messageID = giveawayMessage.id
-						break;
-					case 'reroll':
-						break;
-					case 'end':
-						break;
-					case 'edit':
-						const giveawayID = interaction.options.getString('giveawayid')
-						const giveawayEdit = Giveaways.findOne({ where: { giveawayID: giveawayID } })
-						if (!giveawayEdit) {
-							interaction.reply('That giveaway does not exist')
-							break;
-						}
-						const changeArray = [
-							interaction.options.getString('prize') || giveawayEdit.get('prize'),
-							interaction.options.getInteger('winners') || giveawayEdit.get('winnerCount'),
-							interaction.options.getString('requirement1') || giveawayEdit.get('requirement1'),
-							interaction.options.getString('requirement2') || giveawayEdit.get('requirement2'),
-							interaction.options.getString('requirement3') || giveawayEdit.get('requirement3')
-						]
-						const giveawayEditEmbed = {
-							color: Math.floor(Math.random() * Math.pow(16, 6)),
-							title: 'Giveaway',
-							description: `React with 🎉 to enter!\nHosted by: ${interaction.user.tag}\nRequirements: ${changeArray.slice(2).join(', ')}`,
-							footer: {
-								text: `Ends at <t:${giveawayEdit.get('endAtUnix')}:R>`
-							}
-						}
-						const giveawayEditMessage = await client.channels.cache.get(giveawayEdit.get('channelID')).messages.fetch(giveawayEdit.get('messageID'))
-						giveawayEditMessage.edit({ embeds: [giveawayEditEmbed] })
-						giveawayEdit.update({
-							prize: changeArray[0],
-							winnerCount: changeArray[1],
-							requirement1: changeArray[2],
-							requirement2: changeArray[3],
-							requirement3: changeArray[4]
-						})
-						break;
-					case 'delete':
-						break;
-				}
 			default:
 				break;
 		}
@@ -434,6 +356,13 @@ mainClient.on('messageCreate', async (interaction) => {
 			case 'time':
 				const timeText = `<t:${getUnixTime()}:f>`
 				channel.send(timeText)
+				break;
+			case 'ok':
+				if (author.id === "783855260300869632") {
+					const ok = require('./server/counters.json')
+					ok.okCounter++
+					require('fs').writeFile('./server/counters.json', JSON.stringify(ok, null, 4), function () {})
+				}
 				break;
 			default:
 				break;
