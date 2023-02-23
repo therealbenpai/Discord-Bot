@@ -13,7 +13,7 @@
     "@sentry/types": "^7.21.1",
     "discord.js": "^14.3.0",
     "dotenv": "^16.0.3",
-    "sequelize": "^6.26.0",
+    "sequelize": "^6.28.2",
     "sqlite3": "^5.1.2",
     "upgrade": "^1.1.0",
     "util-deprecate": "^1.0.2"
